@@ -25,7 +25,7 @@ services:
     image: "figarrido/custom-node"
     working_dir: /home/node/app
     depends_on:
-      - nsqlookupd
+      - nsqd
       - manager
     volumes:
       - ./:/home/node/app
