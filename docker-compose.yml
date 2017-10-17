@@ -21,3 +21,22 @@ services:
       - nsqlookupd
     ports:
       - "4171:4171"
+  api:
+    image: "figarrido/custom-node"
+    working_dir: /home/node/app
+    depends_on:
+      - nsqlookupd
+      - manager
+    volumes:
+      - ./:/home/node/app
+    ports:
+      - 3000:8080
+    command: "yarn api"
+  manager:
+    image: "figarrido/custom-node"
+    working_dir: /home/node/app
+    depends_on:
+      - nsqlookupd
+    volumes:
+      - ./:/home/node/app
+    command: "yarn manager"
