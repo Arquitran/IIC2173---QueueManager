@@ -1,14 +1,14 @@
 import { Writer } from 'nsqjs'
 
-const writer = new Writer('127.0.0.1', 4150)
+const NSQ_HOST = 'nsqd'
+const NSQ_PORT = 4150
+
+const writer = new Writer(NSQ_HOST, NSQ_PORT)
 
 writer.connect()
 
-writer.on('ready', () => {
-  writer.publish('test', 'Hello World!!')
-  writer.close()
-})
-
-writer.on('closed', () => {
+writer.on(Writer.CLOSED, () => {
   console.log('Closing writer')
 })
+
+export default writer

@@ -1,12 +1,12 @@
 import { Reader } from 'nsqjs'
 
-const reader = new Reader('test', 'ch_test', {
-  nsqdTCPAddresses: 'localhost:4150'
+const NSQ_HOST = 'nsqd'
+const NSQ_PORT = 4150
+
+const reader = new Reader('response', 'ch_test', {
+  nsqdTCPAddresses: `${NSQ_HOST}:${NSQ_PORT}`
 })
 
 reader.connect()
 
-reader.on('message', msg => {
-  console.log(msg.body.toString())
-  msg.finish()
-})
+export default reader

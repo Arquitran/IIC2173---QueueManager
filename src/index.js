@@ -1,19 +1,44 @@
+/* eslint-disable no-console, no-undef */
 import express from 'express'
 import bodyParser from 'body-parser'
+import consumer from './consumer'
+import producer from './producer'
 
 const app = express()
-const port = 3000
+const router = express.Router()
 
-app.use(bodyParser)
+const HOST = 'localhost'
+const PORT = 8080
 
-app.get('/', (req, res) => {
+app.use(bodyParser.json())
+
+router.get('/:endpoint', (req, res) => {
   res.writeHead(200, {
-    contentType: 'text/html'
+    contentType: 'text/json'
   })
-  res.write('<h1>Hello World!</h1>')
-  res.end()
+
+  const id = Math.floor(Math.random() * 1000000)
+
+  producer.publish('request', {
+    id,
+    url: req.params.endpoint,
+    query: req.query,
+    point: req.params.endpoint
+  })
+
+  consumer.on('message', msg => {
+    let message = JSON.parse(msg.body.toString())
+
+    if (message.id != id) return
+    msg.finish()
+    res.end(JSON.stringify({
+      data: message.data
+    }))
+  })
 })
 
-app.listen(port, () => {
-  console.log(`Serving at http://localhost:${port}/`)
+app.use('/', router)
+
+app.listen(PORT, () => {
+  console.log(`Serving at http://${HOST}:${PORT}/`)
 })
