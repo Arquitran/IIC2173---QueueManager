@@ -2,7 +2,8 @@
   "name": "IIC2173---QueueManager",
   "version": "1.0.0",
   "scripts": {
-    "start": "babel-node src",
+    "api": "babel-node src/index.js",
+    "manager": "babel-node src/manager.js",
     "build": "babel ./src -d ./dist"
   },
   "description": "Queue Manager to Arquitran",
