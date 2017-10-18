@@ -11,9 +11,7 @@ router.post('/', (req, res) => {
 
   const id = Math.floor(Math.random() * 1000000)
 
-  console.log(req.body)
-
-  const endpoint = req.body.action === 'category' ? 'categoria' : 'producto'
+  const endpoint = req.body.action === 'category' ? 'categorias' : 'productos'
 
   producer.publish('request', {
     id,
@@ -34,7 +32,8 @@ router.post('/', (req, res) => {
     }
 
     res.end(JSON.stringify({
-      data: message.data
+      data: message.data,
+      user: req.body.user
     }))
   })
 })
