@@ -2,11 +2,11 @@ import { Reader, Writer } from 'nsqjs'
 import axios from 'axios'
 import mcache from 'memory-cache'
 
-const MAX_TIMEOUT = 300
+const MAX_TIMEOUT = 100
 const MAX_ATTEMPTS = 3
 const NSQ_HOST = 'nsqd'
 const NSQ_PORT = 4150
-const SEC_CACHE = 60
+const SEC_CACHE = 10
 
 const requester = axios.create({
   baseURL: 'http://arqss17.ing.puc.cl:3000/',
@@ -24,8 +24,6 @@ reader.connect()
 reader.on(Reader.MESSAGE, msg => {
   const message = JSON.parse(msg.body.toString())
   if (msg.attempts > MAX_ATTEMPTS) {
-    // TO-DO: Es posible cachear valores anteriores en caso
-    // de superar el máximo de intentos.
     console.log(`[ERROR] Max attempts exceeded for ${message.id}`)
     msg.finish()
     writer.publish('response', {
@@ -35,8 +33,10 @@ reader.on(Reader.MESSAGE, msg => {
     return
   }
 
+  const keyCache = message.url + (message.query.page !== undefined ? `_page_${message.query.page}` : `_page_1`)
+
   console.log(`[REQUEST] /${message.url} from ${message.id}`)
-  const cachedData = mcache.get(message.url)
+  const cachedData = mcache.get(keyCache)
   if (cachedData !== null) {
     msg.finish()
     writer.publish('response', {
@@ -46,7 +46,7 @@ reader.on(Reader.MESSAGE, msg => {
   } else {
     requester.get(message.url, {params: message.query})
       .then(response => {
-        mcache.put(message.url, response.data, SEC_CACHE * 1000)
+        mcache.put(keyCache, response.data, SEC_CACHE * 1000)
         mcache.put(`${message.url}_old`, response.data)
         writer.publish('response', {
           id: message.id,
