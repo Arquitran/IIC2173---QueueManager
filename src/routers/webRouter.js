@@ -32,9 +32,7 @@ router.get('/:endpoint', (req, res) => {
       return
     }
 
-    res.end(JSON.stringify({
-      data: message.data
-    }))
+    res.end(JSON.stringify(message.data))
   })
 })
 
