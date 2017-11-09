@@ -7,9 +7,10 @@ const MAX_ATTEMPTS = 3
 const NSQ_HOST = 'nsqd'
 const NSQ_PORT = 4150
 const SEC_CACHE = 10
+const APPLICATION_TOKEN = "6d876925-a71d-4379-93aa-6144138dc8fc";
 
 const requester = axios.create({
-  baseURL: 'http://arqss17.ing.puc.cl:3000/',
+  baseURL: 'http://arqss16.ing.puc.cl/',
   timeout: MAX_TIMEOUT
 })
 
@@ -44,7 +45,15 @@ reader.on(Reader.MESSAGE, msg => {
       data: cachedData
     })
   } else {
-    requester.get(message.url, {params: message.query})
+    const method = message.method || "get";
+    requester.request({
+      method,
+      url: message.url,
+      params: {
+        "application_token": APPLICATION_TOKEN,
+        ...message.query
+      }
+    })
       .then(response => {
         mcache.put(keyCache, response.data, SEC_CACHE * 1000)
         mcache.put(`${message.url}_old`, response.data)

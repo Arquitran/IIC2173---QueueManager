@@ -22,7 +22,7 @@ services:
     ports:
       - "4171:4171"
   api:
-    image: "figarrido/custom-node"
+    image: "rpalmaotero/iic2173-queue"
     working_dir: /home/node/app
     depends_on:
       - nsqd

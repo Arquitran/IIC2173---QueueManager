@@ -4,7 +4,7 @@ import producer from '../producer'
 
 const router = express.Router()
 
-router.get('/:endpoint', (req, res) => {
+router.all('/:endpoint', (req, res) => {
   res.writeHead(200, {
     contentType: 'text/json'
   })
@@ -14,6 +14,7 @@ router.get('/:endpoint', (req, res) => {
   producer.publish('request', {
     id,
     url: req.params.endpoint,
+    method: req.method,
     query: {
       page: req.query.page
     },
@@ -32,9 +33,7 @@ router.get('/:endpoint', (req, res) => {
       return
     }
 
-    res.end(JSON.stringify({
-      data: message.data
-    }))
+    res.end(JSON.stringify(message.data))
   })
 })
 
