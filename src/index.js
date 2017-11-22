@@ -1,13 +1,12 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import webRouter from './routers/webRouter'
-import mailRouter from './routers/mailRouter'
 import cors from 'cors'
+import { getPages, getResource } from './request-pages'
 
 const app = express()
 
-const HOST = 'localhost'
-const PORT = 8080
+const HOST = process.env.HOST || 'localhost'
+const PORT = process.env.PORT || 8080
 
 app.use(bodyParser.json())
 app.use(cors())
@@ -16,8 +15,27 @@ app.get('/favicon.ico', (req, res) => {
   res.sendStatus(204)
 })
 
-app.use('/web', webRouter)
-app.use('/mail', mailRouter)
+app.get('/:resource/:id', (req, res) => {
+  getResource(req.params.resource, req.params.id)
+    .then(response => {
+      res.write(JSON.stringify(response))
+      res.end()
+    })
+    .catch(() => {
+      console.log('[CATCH RESOURCE ID]')
+    })
+})
+
+app.get('/:resources', (req, res) => {
+  getPages(`${req.params.resources}`)
+    .then(resources => {
+      res.write(JSON.stringify(resources))
+      res.end()
+    })
+    .catch(() => {
+      console.log('[CATCH]')
+    })
+})
 
 app.listen(PORT, () => {
   console.log(`Serving at http://${HOST}:${PORT}/`)
