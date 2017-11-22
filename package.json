@@ -6,7 +6,8 @@
     "manager": "babel-node src/manager.js",
     "build": "babel ./src -d ./dist",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "lint": "eslint ."
   },
   "description": "Queue Manager to Arquitran",
   "repository": "https://github.com/Arquitran/IIC2173---QueueManager.git",
