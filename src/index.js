@@ -21,8 +21,7 @@ app.get('/favicon.ico', (req, res) => {
 app.get('/:resource/:id', (req, res) => {
   getResource(req.params.resource, req.params.id)
     .then(response => {
-      res.write(JSON.stringify(response))
-      res.end()
+      res.json(response)
     })
     .catch(handleRequestError(res))
 })
@@ -30,8 +29,7 @@ app.get('/:resource/:id', (req, res) => {
 app.get('/:resources', (req, res) => {
   getPages(`${req.params.resources}`)
     .then(resources => {
-      res.write(JSON.stringify(resources))
-      res.end()
+      res.json(resources)
     })
     .catch(handleRequestError(res))
 })
