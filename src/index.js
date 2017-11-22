@@ -1,7 +1,9 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import cors from 'cors'
-import { getPages, getResource } from './request-pages'
+const express = require('express')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const morgan = require('morgan')
+const { getPages, getResource, postResource } = require('./request-pages')
+const { handleRequestError } = require('./helpers')
 
 const app = express()
 
@@ -10,31 +12,36 @@ const PORT = process.env.PORT || 8080
 
 app.use(bodyParser.json())
 app.use(cors())
+app.use(morgan('dev'))
 
 app.get('/favicon.ico', (req, res) => {
-  res.sendStatus(204)
+  res.sendStatus(204) // No Content
 })
 
 app.get('/:resource/:id', (req, res) => {
   getResource(req.params.resource, req.params.id)
     .then(response => {
-      res.write(JSON.stringify(response))
-      res.end()
+      res.json(response)
     })
-    .catch(() => {
-      console.log('[CATCH RESOURCE ID]')
-    })
+    .catch(handleRequestError(res))
 })
 
 app.get('/:resources', (req, res) => {
   getPages(`${req.params.resources}`)
     .then(resources => {
-      res.write(JSON.stringify(resources))
-      res.end()
+      res.json(resources)
     })
-    .catch(() => {
-      console.log('[CATCH]')
+    .catch(handleRequestError(res))
+})
+
+app.post('/:resources', (req, res) => {
+  postResource(req.params.resources, req.body)
+    .then(apiRes => {
+      res.setHeader('location', apiRes.headers.location)
+      res.status(apiRes.status)
+      res.json(apiRes.data)
     })
+    .catch(handleRequestError(res))
 })
 
 app.listen(PORT, () => {

@@ -4,7 +4,10 @@
   "scripts": {
     "api": "babel-node src/index.js",
     "manager": "babel-node src/manager.js",
-    "build": "babel ./src -d ./dist"
+    "build": "babel ./src -d ./dist",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "lint": "eslint ."
   },
   "description": "Queue Manager to Arquitran",
   "repository": "https://github.com/Arquitran/IIC2173---QueueManager.git",
@@ -17,7 +20,9 @@
     "cors": "^2.8.4",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
-    "memory-cache": "^0.2.0"
+    "memory-cache": "^0.2.0",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.12.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
