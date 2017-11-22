@@ -1,4 +1,4 @@
-import Axios from 'axios'
+const Axios = require('axios');
 
 require('dotenv').config()
 
@@ -20,7 +20,7 @@ const getPage = resource => async page => {
   return data
 }
 
-export const getPages = async resource => {
+module.exports.getPages = async resource => {
   const pages = []
   let page = 0
   let actualPage = await getPage(resource)(page)
@@ -40,7 +40,7 @@ export const getPages = async resource => {
   ], [])
 }
 
-export const getResource = async (resource, resourceID) => {
+module.exports.getResource = async (resource, resourceID) => {
   const { data } = await axios(`/${resource}/${resourceID}`)
   return data
 }

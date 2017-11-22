@@ -1,7 +1,7 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import cors from 'cors'
-import { getPages, getResource } from './request-pages'
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const { getPages, getResource } = require('./request-pages');
 
 const app = express()
 
