@@ -1,7 +1,7 @@
 module.exports.handleRequestError = (res) => {
   return (error) => {
     if (error.response) {
-      console.log('Legacy API errored: ', error.response)
+      console.log('Legacy API errored: ', error.response.status)
       res.sendStatus(error.response.status)
     } else if (error.request) {
       console.log('Legacy API didn\'t respond...')

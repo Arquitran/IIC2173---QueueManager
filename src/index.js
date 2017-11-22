@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const morgan = require('morgan')
 const { getPages, getResource } = require('./request-pages')
 const { handleRequestError } = require('./helpers')
 
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 8080
 
 app.use(bodyParser.json())
 app.use(cors())
+app.use(morgan('dev'))
 
 app.get('/favicon.ico', (req, res) => {
   res.sendStatus(204) // No Content
