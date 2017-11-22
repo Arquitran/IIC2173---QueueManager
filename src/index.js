@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
-const { getPages, getResource } = require('./request-pages')
+const { getPages, getResource, postResource } = require('./request-pages')
 const { handleRequestError } = require('./helpers')
 
 const app = express()
@@ -30,6 +30,16 @@ app.get('/:resources', (req, res) => {
   getPages(`${req.params.resources}`)
     .then(resources => {
       res.json(resources)
+    })
+    .catch(handleRequestError(res))
+})
+
+app.post('/:resources', (req, res) => {
+  postResource(req.params.resources, req.body)
+    .then(apiRes => {
+      res.setHeader('location', apiRes.headers.location)
+      res.status(apiRes.status)
+      res.json(apiRes.data)
     })
     .catch(handleRequestError(res))
 })
