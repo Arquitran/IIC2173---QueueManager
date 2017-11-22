@@ -1,4 +1,4 @@
-const Axios = require('axios');
+const Axios = require('axios')
 
 require('dotenv').config()
 
@@ -25,7 +25,8 @@ module.exports.getPages = async resource => {
   let page = 0
   let actualPage = await getPage(resource)(page)
 
-  while (true) { // disable-eslint no-constant-condition
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
     pages.push(actualPage)
     actualPage = await getPage(resource)(page + 1)
 

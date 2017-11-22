@@ -1,7 +1,8 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const { getPages, getResource } = require('./request-pages');
+const express = require('express')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const { getPages, getResource } = require('./request-pages')
+const { handleRequestError } = require('./helpers')
 
 const app = express()
 
@@ -12,7 +13,7 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.get('/favicon.ico', (req, res) => {
-  res.sendStatus(204)
+  res.sendStatus(204) // No Content
 })
 
 app.get('/:resource/:id', (req, res) => {
@@ -21,9 +22,7 @@ app.get('/:resource/:id', (req, res) => {
       res.write(JSON.stringify(response))
       res.end()
     })
-    .catch(() => {
-      console.log('[CATCH RESOURCE ID]')
-    })
+    .catch(handleRequestError(res))
 })
 
 app.get('/:resources', (req, res) => {
@@ -32,9 +31,7 @@ app.get('/:resources', (req, res) => {
       res.write(JSON.stringify(resources))
       res.end()
     })
-    .catch(() => {
-      console.log('[CATCH]')
-    })
+    .catch(handleRequestError(res))
 })
 
 app.listen(PORT, () => {
